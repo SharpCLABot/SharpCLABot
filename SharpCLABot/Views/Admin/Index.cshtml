@@ -1,0 +1,318 @@
+﻿@model SharpCLABot.ViewModels.AdminConfigViewModel
+@{
+    ViewBag.Title = AdminConfig.Instance.ProjectName + " - Admin";
+}
+<div class="row">
+    <div class="col-md-12">
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="active"><a href="#general" role="tab" data-toggle="tab">General</a></li>
+            <li><a href="#replies" role="tab" data-toggle="tab">Replies</a></li>
+            <li><a href="#agreements" role="tab" data-toggle="tab">Agreements</a></li>
+            <li><a href="#contributors" role="tab" data-toggle="tab">Contributors</a></li>
+        </ul>
+        
+        <span class="has-error">
+            @Html.ValidationSummary(true)
+        </span>
+
+        <!-- Tab panes -->
+        @using (Html.BeginForm("Index", "Admin"))
+        {
+            @Html.AntiForgeryToken()
+            <fieldset>
+                <div class="tab-content row">
+                    <div class="tab-pane active" id="general">
+                        <div class="col-md-6">
+                            <h2>General</h2>
+                            <div class="form-group">
+                                <span class="has-error">@Html.ValidationSummary(true)</span>
+                                <label for="Config.GitHubAdminApplicationToken">Personal Access Token</label>
+                                @Html.TextBoxFor(m => m.Config.GitHubAdminApplicationToken, new { @class = "form-control", @readonly = "" })
+                                @Html.ValidationMessageFor(m => m.Config.GitHubAdminApplicationToken, null, new { @class = "help-block" })
+                            </div>
+                            <div class="form-group">
+                                <label for="Config.ProjectName">Project Name</label>
+                                @Html.TextBoxFor(m => m.Config.ProjectName, new { @class = "form-control", placeholder = "Enter the name of your project" })
+                                @Html.ValidationMessageFor(m => m.Config.ProjectName, null, new { @class = "help-block" })
+                            </div>
+                            <div class="form-group">
+                                <label for="Config.ProjectUrl">Project URL</label>
+                                @Html.TextBoxFor(m => m.Config.ProjectUrl, new { @class = "form-control", placeholder = "Enter the Homepage URL of your project" })
+                                @Html.ValidationMessageFor(m => m.Config.ProjectUrl, null, new { @class = "help-block" })
+                            </div>
+                            <h2>Application OAuth</h2>
+
+                            <div class="form-group">
+                                <label for="Config.GitHubApplicationClientId">Github Application ClientId</label>
+                                @Html.TextBoxFor(m => m.Config.GitHubApplicationClientId, new { @class = "form-control", placeholder = "Enter the Application client id" })
+                                @Html.ValidationMessageFor(m => m.Config.GitHubApplicationClientId, null, new { @class = "help-block" })
+                            </div>
+                            <div class="form-group">
+                                <label for="Config.GitHubApplicationClientSecret">Github Application Secret</label>
+                                @Html.TextBoxFor(m => m.Config.GitHubApplicationClientSecret, new { @class = "form-control", placeholder = "Enter the Application client secret code" })
+                                @Html.ValidationMessageFor(m => m.Config.GitHubApplicationClientSecret, null, new { @class = "help-block" })
+                            </div>
+
+                            <h2>WebHook</h2>
+
+                            <div class="form-group">
+                                <label for="Config.GitHubWebHookCallbackSecret">Github WebHook Callback Secret</label>
+                                @Html.TextBoxFor(m => m.Config.GitHubWebHookCallbackSecret, new { @class = "form-control", placeholder = "Enter the WebHook secret code" })
+                                @Html.ValidationMessageFor(m => m.Config.GitHubWebHookCallbackSecret, null, new { @class = "help-block" })
+                                <p class="help-block">The webhook callback secret code allows to certify that github is the originator of the callback. Enter a random string to certify the webhook callback message.</p>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="Config.GitHubWebHookCallbackUrl">Github WebHook Callback URL</label>
+                                @Html.TextBoxFor(m => m.Config.GitHubWebHookCallbackUrl, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.Config.GitHubWebHookCallbackUrl, null, new { @class = "help-block"})
+                                <input id="DefaultWebHook" type="checkbox" name="defaultWebHook" /> Use Default (recommended)
+                                <div class="bs-callout bs-callout-warning">
+                                    <p class="help-block">
+                                        This is the URL that will receive callback from github pull requests. Leave this field blank if you are hosting the service
+                                        on an internet server to let the default SharpCLABot URL to be configured.
+                                    </p>
+                                    <p class="help-block">If the URL is correctly configured, the original pull request will get a comment from your account to ask to sign for the CLA.</p>
+                                </div>
+                            </div>
+                            
+                            <h2>Database</h2>
+
+                            <div class="form-group">
+                                <label for="Config_ConnectionStringDb">Connection String</label>
+                                @Html.TextBoxFor(m => m.Config.ConnectionStringDb, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.Config.ConnectionStringDb, null, new { @class = "help-block" })
+                                <div style="float: left">
+                                    @Html.CheckBoxFor(m => m.Config.IsLocalDb) Use LocalDb
+                                </div>
+                                <div style="float: right">
+                                    <button id="DbConnectionTestButton" type="button" role="button" class="btn btn-default">Test <img id="DbConnectionTestLoader" src="/Content/Images/ajax-loader.gif" style="display: none" alt="loading" /></button>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <p id="DbConnectionTestResult"></p>
+                            <div class="bs-callout bs-callout-warning">
+                                <p class="help-block">
+                                    Note that by default, SharpCLABot is using LocalDb. If you are hosting this service on Azure
+                                    or a custom web server that doesn't support LocalDb, you will need to use a dedicated
+                                    sql server.
+                                </p>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-success btn-lg">Save</button>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h2>Repositories</h2>
+                            
+                            <div class="bs-callout bs-callout-info">
+                                <p class="help-block">
+                                    Select the repositories that will be configured with the web hook to notify this server
+                                    about a pull request from a contributor that has not yet signed the CLA.
+                                </p>
+                            </div>
+
+                            <div class="form-group">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>GitHub Repository</th>
+                                            <th>Hook Installed?</th>
+                                            <th>Hook Validated?</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @for (int i = 0; i < Model.Config.Hooks.Count; i++)
+                                        {
+                                            int index = i;
+                                            var hook = Model.Config.Hooks[i];
+                                            <tr>
+                                                <td style="vertical-align: middle">
+                                                    @Html.HiddenFor(m => m.Config.Hooks[index].Id)
+                                                    @Html.HiddenFor(m => m.Config.Hooks[index].Owner)
+                                                    @Html.HiddenFor(m => m.Config.Hooks[index].Name)
+                                                    <a href="http://github.com/@(hook.Owner)/@(hook.Name)" target="_blank">@(hook.Owner)/@(hook.Name)</a>
+                                                </td>
+                                                <td>
+                                                    @Html.CheckBoxFor(m => m.Config.Hooks[index].Installed, new { @class = "form-control" })
+                                                </td>
+                                                <td style="vertical-align: middle">
+                                                    @Html.HiddenFor(m => m.Config.Hooks[index].Validated)
+                                                    @if (hook.Installed)
+                                                    {
+                                                        if (hook.Validated)
+                                                        {
+                                                            <p class="text-success text-center" style="margin: 0px;"><span class="glyphicon glyphicon-ok"></span></p>
+                                                        }
+                                                        else
+                                                        {
+                                                            <p class="text-danger text-center" style="margin: 0px;"><span class="glyphicon glyphicon-remove"></span></p>
+                                                        }
+
+                                                    }
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane" id="replies">
+                        <div class="container-fluid">
+                            <h2>Bot Comment Replies</h2>
+                            <p>The following html texts are used to send comments on original pull request when a contributor has not yet signed the CLA.</p>
+                            <div class="form-group">
+                                <label for="ReplyCLANotSigned">Reply CLA Not Signed</label>
+                                @Html.TextAreaFor(m => m.Config.ReplyCLANotSigned, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.Config.ReplyCLANotSigned, null, new { @class = "help-block" })
+                                <span class="help-block">Enter a <strong>markdown</strong> message that will be sent as a reply-comment to the pull request of a new contributor</span>
+                            </div>
+                            <div class="form-group">
+                                <label for="ReplyCLASignedDone">Reply CLA Signed Done</label>
+                                @Html.TextAreaFor(m => m.Config.ReplyCLASignedDone, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.Config.ReplyCLASignedDone, null, new { @class = "help-block" })
+                                <span class="help-block">Enter a <strong>markdown</strong> message that will be sent as a reply-comment when a new contributor just signed the CLA</span>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-success btn-lg">Save</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane" id="agreements">
+                        <div class="container-fluid">
+                            <h2>Agreements</h2>
+                            <p>The following text are the Individual CLA that is going to be signed by the contributor as well as your contractor informations.</p>
+                            <div class="form-group">
+                                <label for="InformationUs">Information about Us</label>
+                                @Html.TextAreaFor(m => m.Config.InformationUs, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.Config.InformationUs, null, new { @class = "help-block" })
+                                <span class="help-block">Enter the HTML text that will be displayed for the "Information Us" part in the the Individual CLA that will be signed by a contributor</span>
+                            </div>
+                            <div class="form-group">
+                                <label for="IndividualCLA">Invidual CLA</label>
+                                @Html.TextAreaFor(m => m.Config.IndividualCLA, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.Config.IndividualCLA, null, new { @class = "help-block" })
+                                <span class="help-block">Enter the HTML text that will be displayed for the Individual CLA that will be signed by a contributor</span>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-success btn-lg">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-pane" id="contributors">
+                        <div class="container-fluid">
+                            <h2>Contributors</h2>
+                            <p>This is the current registered contributors.</p>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Id</th>
+                                        <th>FullName</th>
+                                        <th>Email</th>
+                                        <th>Address</th>
+                                        <th>ZipCode</th>
+                                        <th>City</th>
+                                        <th>Phone</th>
+                                        <th>PullRequest</th>
+                                        <th>Date</th>
+                                        <th>Signed</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach(var contributor in Model.Contributors)
+                                    {
+                                        <tr>
+                                            <td style="vertical-align: middle">@contributor.Id</td>
+                                            <td style="vertical-align: middle">@contributor.FullName</td>
+                                            <td style="vertical-align: middle">@contributor.Email</td>
+                                            <td style="vertical-align: middle">@contributor.Address</td>
+                                            <td style="vertical-align: middle">@contributor.ZipCode</td>
+                                            <td style="vertical-align: middle">@contributor.City</td>
+                                            <td style="vertical-align: middle">@contributor.Phone</td>
+                                            <td style="vertical-align: middle">
+                                                @if (contributor.PullRequestRepositoryOwner != null)
+                                                {
+                                                    <a href="https://github.com/@(contributor.PullRequestRepositoryOwner)/@(contributor.PullRequestRepositoryName)/pull/@(contributor.PullRequestNumber)">@(contributor.PullRequestRepositoryName) (#@(contributor.PullRequestNumber))</a>
+                                                }
+                                            </td>
+                                            <td style="vertical-align: middle">@contributor.SignatureDate</td>
+                                            <td style="vertical-align: middle">
+                                                @if (contributor.Accepted)
+                                                {
+                                                    <p class="text-success text-center" style="margin: 0px;"><span class="glyphicon glyphicon-ok"></span></p>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>                    
+                </div>
+            </fieldset>
+        }
+    </div>
+</div>
+<script type="text/javascript">
+
+    var c1 = CodeMirror.fromTextArea(document.getElementById("Config_ReplyCLANotSigned"), { lineNumbers: true, mode: "markdown", lineWrapping: true });
+    var c2 = CodeMirror.fromTextArea(document.getElementById("Config_ReplyCLASignedDone"), { lineNumbers: true, mode: "markdown", lineWrapping: true });
+    var c3 = CodeMirror.fromTextArea(document.getElementById("Config_InformationUs"), { lineNumbers: true, mode: "htmlmixed", lineWrapping: true });
+    var c4 = CodeMirror.fromTextArea(document.getElementById("Config_IndividualCLA"), { lineNumbers: true, mode: "htmlmixed", lineWrapping: true });
+
+    /* Test DB Connection */
+    $('#Config_ConnectionStringDb').prop('readonly', @Model.Config.IsLocalDb.ToString().ToLowerInvariant());
+    $('#Config_IsLocalDb').click(function (e) {
+        $('#Config_ConnectionStringDb').prop('readonly', this.checked);
+        if (this.checked) {
+            $('#Config_ConnectionStringDb')[0].value = "@HttpUtility.JavaScriptStringEncode(AdminConfig.DefaultLocalDbConnectionString)";
+        }
+    });
+
+    $('#DbConnectionTestButton').click(function(e) {
+        var elt = $('#Config_ConnectionStringDb')[0]; // why we need to index through an array?
+        var val = elt.value;
+
+        $('#DbConnectionTestButton').prop('disabled', true);
+        $('#DbConnectionTestLoader').show();
+        $.post("/Admin/CheckDb", { "connectionString" : val }).done(function(data) {
+            $('#DbConnectionTestResult').text(data.Message);
+            if (data.IsValid) {
+                $('#DbConnectionTestResult').addClass('text-success').removeClass('text-danger');
+            } else {
+                $('#DbConnectionTestResult').addClass('text-danger').removeClass('text-success');
+            }
+        }).complete(function() {
+            $('#DbConnectionTestLoader').hide();
+            $('#DbConnectionTestButton').prop('disabled', false);
+        });
+    });
+
+    /* WebHook */
+    var webHookUrl = $('#Config_GitHubWebHookCallbackUrl')[0];
+    var useDefaultWebHook = webHookUrl.value === '';
+    $('#DefaultWebHook')[0].checked = useDefaultWebHook;
+    webHookUrl.disabled = useDefaultWebHook;
+
+    $('#DefaultWebHook').click(function(e) {
+        if (this.checked) {
+            webHookUrl.value = '';
+            webHookUrl.disabled = true;
+        } else {
+            webHookUrl.disabled = false;
+        }
+    });
+
+    // Workaround to make sure CodeMirror is correctly initialized when switching tabs
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+        c1.refresh();
+        c2.refresh();
+        c3.refresh();
+        c4.refresh();
+    });
+</script>

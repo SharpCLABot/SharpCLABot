@@ -1,0 +1,109 @@
+﻿@model SharpCLABot.ViewModels.AgreementViewModel
+@{
+    ViewBag.Title = AdminConfig.Instance.ProjectName + " - Sign Agreement";
+    var readonlyAttributes = new Dictionary<string, object>()
+        {
+            {"class", "form-control"},
+            {"readonly", ""},
+        };
+        
+    var attributes = new Func<string, Dictionary<string, object>>(placeHolder =>
+    {
+        var attrs = new Dictionary<string, object>()
+        {
+            {"class", "form-control"},
+        };
+
+        if (Model.Contributor.Accepted)
+        {
+            attrs.Add("readonly", string.Empty);
+        }
+        if (placeHolder != string.Empty)
+        {
+            attrs.Add("placeholder", placeHolder);
+        }
+        return attrs;
+    });
+}
+<div>
+    
+    @Html.Partial("~/Views/Home/IndividualCLA.cshtml")
+
+    <div class="row">
+        <div class="col-md-6">
+            <h1>Us</h1>
+            @Html.Partial("~/Views/Home/InformationUs.cshtml")
+        </div>
+        <div class="col-md-6">
+            <h1>You</h1>
+            
+            @Html.ValidationSummary()
+
+            @using (Html.BeginForm("Submit", "Home"))
+            {
+                <fieldset>
+                    <div class="form-group">
+                        <label for="Id">Identifier</label>
+                        @Html.TextBoxFor(model => model.Contributor.Id, readonlyAttributes)
+                    </div>
+                    <div class="form-group">
+                        <label for="FullName">FullName</label>
+                        @Html.TextBoxFor(model => model.Contributor.FullName, attributes("Enter your fullname") )
+                        @Html.ValidationMessageFor(model => model.Contributor.FullName, null, new { @class = "help-block" })
+                    </div>
+                    <div class="form-group">
+                        <label for="Email">Email address</label>
+                        @Html.TextBoxFor(model => model.Contributor.Email, attributes("Enter email"))
+                        @Html.ValidationMessageFor(model => model.Contributor.Email, null, new { @class = "help-block" })
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Address">Address</label>
+                        @Html.TextBoxFor(model => model.Contributor.Address, attributes("Enter your Address"))
+                        @Html.ValidationMessageFor(model => model.Contributor.Address, null, new { @class= "help-block" })
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ZipCode">ZipCode</label>
+                        @Html.TextBoxFor(model => model.Contributor.ZipCode, attributes("Enter your Zip Code"))
+                        @Html.ValidationMessageFor(model => model.Contributor.ZipCode, null, new { @class = "help-block" })
+                    </div>
+
+                    <div class="form-group">
+                        <label for="City">City</label>
+                        @Html.TextBoxFor(model => model.Contributor.City, attributes("Enter your City"))
+                        @Html.ValidationMessageFor(model => model.Contributor.City, null, new { @class = "help-block" })
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="Phone">Phone</label>
+                        @Html.TextBoxFor(model => model.Contributor.Phone, attributes("Enter your Phone"))
+                        @Html.ValidationMessageFor(model => model.Contributor.Phone, null, new { @class = "help-block" })
+                    </div>
+
+                    <div class="form-group">
+                        <label for="SignatureDate">Date</label>
+                        @Html.TextBoxFor(model => model.Contributor.SignatureDate, readonlyAttributes)
+                    </div>                    
+
+                    <div class="form-group">
+                        <label for="TextAgreement">Agreement</label>
+                        @Html.TextBoxFor(model => model.TextAgreement, attributes("Enter I AGREE"))
+                        @Html.ValidationMessageFor(model => model.TextAgreement, null, new { @class = "help-block" })
+                    </div>
+
+                    @if (!Model.Contributor.Accepted)
+                    {
+                        <button type="submit" class="btn btn-default">Sign This Aggreement</button>
+                    }
+                    else
+                    {
+                        <div class="form-group">
+                            <p class="text-success"><span class="glyphicon glyphicon-ok"></span> You have accepted this Contributor License Agreement</p>
+                        </div>
+                    }
+                </fieldset>
+            }
+        </div>
+    </div>
+</div>

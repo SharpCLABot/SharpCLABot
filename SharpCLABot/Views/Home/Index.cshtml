@@ -1,0 +1,10 @@
+﻿@{
+    ViewBag.Title = AdminConfig.Instance.ProjectName + " - Home";
+}
+<!-- Main jumbotron for a primary marketing message or call to action -->
+<div class="jumbotron">
+    <h1>Welcome!</h1>
+    <p>This is the home page for signing the <strong>C</strong>ontributor <strong>L</strong>icense <strong>A</strong>greement for <a href="@AdminConfig.Instance.ProjectUrl" target="_blank">@AdminConfig.Instance.ProjectName</a>.</p>
+    <p>@Html.ActionLink("Sign CLA »", "Sign", "Home", new { area = "" }, new { @class = "btn btn-primary btn-lg", role = "button" })</p>
+</div>
+

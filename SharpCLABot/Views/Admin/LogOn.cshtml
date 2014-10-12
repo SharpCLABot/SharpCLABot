@@ -1,0 +1,207 @@
+﻿@model SharpCLABot.ViewModels.LogOnViewModel
+@{
+    ViewBag.Title = AdminConfig.Instance.ProjectName + " - " + (Model.IsSetup ? "Setup" : "LogOn");
+    var hasErrors = ViewData.ModelState.Values.Any(state => state.Errors.Count > 0);
+}
+@if (Model.IsSetup)
+{
+    <div id="setup" class="jumbotron" style="display: none">
+        <h1>Setup</h1>
+        <p>SharpCLABot is not yet configured!</p>
+
+        <p>
+            Follow the instructions to setup SharpCLABot.
+        </p>
+
+        <button id="setup-btn" class="btn btn-primary btn-lg" role="button" style="float: right">Next »</button>
+        <br />
+    </div>
+    <div id="step1" class="container" style="display: none">
+
+        <h2>Step 1: Generate a personnal access token for the Bot</h2>
+
+        <p>You need to have an account that will be used as a bot account to invite user on pull-request to sign the CLA.</p>
+
+        <p>
+            Go to <a href="https://github.com/settings/applications">Github settings Applications</a> and generate a <strong>personal access token</strong> with the account that is going to be used
+            as a bot.
+        </p>
+
+        <p>This account should be part of the team having access to the repositories are requiring CLA.</p>
+
+        <div class="row">
+            <div class="col-md-3">
+                <h3>1. Go to Application</h3>
+                <div class="thumbnail">
+                    <img src="/Content/Images/CreatePersonalToken-1.png" class="img-responsive" alt="Create Personal Token Step 1'" />
+                </div>
+                <div class="caption">
+                    <p>
+                        Connect to the github account that will be used as a bot account on github to post reply on pull-request
+                        and to ask users to sign the CLA. Go to <strong>Settings</strong> (top right on your main screen) and <strong>Application</strong>.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <h3>2. Generate new token</h3>
+                <div class="thumbnail">
+                    <img src="/Content/Images/CreatePersonalToken-2.png" class="img-responsive" alt="Create Personal Token Step 1'" />
+                </div>
+                <div class="caption">
+                    <p>Generate a new token from the <strong>Personal Access Tokens</strong> group. </p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <h3>3. Edit token settings</h3>
+                <div class="thumbnail">
+                    <img src="/Content/Images/CreatePersonalToken-3.png" class="img-responsive" alt="Create Personal Token Step 1'" />
+                </div>
+                <div class="caption">
+                    <p>From "Edit personal access token", select <code>repo</code>, <code>notifications</code> and then click <strong>Update token</strong>.</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <h3>4. Copy the token</h3>
+                <div class="thumbnail">
+                    <img src="/Content/Images/CreatePersonalToken-4.png" class="img-responsive" alt="Create Personal Token Step 1'" />
+                </div>
+                <div class="caption">
+                    <p>Copy the token to a notepad and go to the next step.</p>
+                </div>
+            </div>
+        </div>
+        <button id="setup-back-btn" class="btn btn-default btn-lg" role="button" style="float: left">Back</button>
+        <button id="step1-btn" class="btn btn-primary btn-lg" role="button" style="float: right">Next »</button>
+    </div>
+
+    <div id="step2" class="container" style="display: none">
+        <h2>Step 2: Generate an application token for user OAuth</h2>
+
+        <p>
+            When a user is redirected to SharpCLABot to sign a CLA, SharpCLABot needs to verify the identity of the github user.
+            In order to do this, we need to use an <strong>application token</strong>
+        </p>
+
+        <p>
+            Go to <a href="https://github.com/settings/applications">Github settings Applications</a> and generate an <strong>application token</strong> with the account that is going to be used
+            as a bot.
+        </p>
+
+        <div class="row">
+            <div class="col-md-4">
+                <h3>1. Register an Application</h3>
+                <div class="thumbnail">
+                    <img src="/Content/Images/CreateAppToken-1.png" class="img-responsive" alt="Create Application Token Step 1'" />
+                </div>
+                <div class="caption">
+                    <p>
+                        Go to <strong>Settings</strong> (top right on your main screen), <strong>Application</strong> and then
+                        <strong>Register a New Application</strong>.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <h3>2. Fill the form</h3>
+                <div class="thumbnail">
+                    <img src="/Content/Images/CreateAppToken-2.png" class="img-responsive" alt="Create Application Token Step 1'" />
+                </div>
+                <div class="caption">
+                    <p>In the <strong>Homepage URL</strong>, put the address of your SharpCLABot host (can be localhost if 
+                    you are testing it) with <code>/Home/Sign</code>, so an address would be setup as <code>http://myproject.com/Home/Sign</code>.
+                    <p>In the <strong>Authorization callback URL</strong>, use <code>/Home/Authorize</code>, so the absolute would look like <code>http://myproject.com/Home/Authorize</code>.
+                </div>
+            </div>
+            <div class="col-md-4">
+                <h3>3. Copy the Client Id and Secret</h3>
+                <div class="thumbnail">
+                    <img src="/Content/Images/CreateAppToken-3.png" class="img-responsive" alt="Create Application Token Step 1'" />
+                </div>
+                <div class="caption">
+                    <p>Copy the <strong>Client Id</strong> and <strong>Client Secret</strong> code in a notepad, as you will need it to configure later SharpCLABot..</p>
+                </div>
+            </div>
+        </div>
+
+        <button id="step1-back-btn" class="btn btn-default btn-lg" role="button" style="float: left">Back</button>
+        <button id="step2-btn" class="btn btn-primary btn-lg" role="button" style="float: right">Next »</button>
+    </div>
+}
+<div id="logon" class="row" style="display: none">
+    <div class="col-md-6">
+
+        @using (Html.BeginForm(null, null, FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            <fieldset>
+                <div class='form-group@(hasErrors?" has-error": string.Empty)'>
+                    <span class="has-error">@Html.ValidationSummary(true, null, new { @class = "help-block has-error" })</span>
+                    <label for="Token">Github Token</label>
+                    @Html.PasswordFor(model => model.Token, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Token, null, new { @class = "help-block has-error" })
+                    <span class="help-block">Enter your github admin token (Or generate one at your <a href="https://github.com/settings/applications">Github settings Applications</a>)</span>
+                </div>
+                <div class='form-group'>
+                    <label>
+                        @Html.CheckBoxFor(model => model.RememberMe) Remember me?
+                    </label>
+                </div>
+                <div class="form-group">
+                    @if (Model.IsSetup)
+                    {
+                        <button type="button" id="step2-back-btn" class="btn btn-default" role="button" style="float: left">Back</button>
+                    }
+                    <button type="submit" class="btn btn-primary" style="float: right">@(Model.IsSetup ? "Next »" : "LogOn")</button>
+                    
+                    @if (Model.IsSetup)
+                    {
+                        <div class="clearfix"></div>
+                        <br/>
+                        <p class="bg-warning">When clicking next, this will connect to the github account and get all repositories. 
+                    This can take a few seconds.</p>
+                    }
+                </div>
+            </fieldset>
+        }
+    </div>
+</div>
+
+@if (Model.IsSetup)
+{
+    <script language="javascript">
+        $("#setup").show();
+
+        $("#setup-btn").click(function() {
+            $("#setup").hide();
+            $("#step1").show();
+        });
+
+        $("#setup-back-btn").click(function() {
+            $("#setup").show();
+            $("#step1").hide();
+        });
+        $("#step1-btn").click(function() {
+            $("#step1").hide();
+            $("#step2").show();
+        });
+
+        $("#step1-back-btn").click(function() {
+            $("#step1").show();
+            $("#step2").hide();
+        });
+        $("#step2-btn").click(function() {
+            $("#step2").hide();
+            $("#logon").show();
+        });
+
+        $("#step2-back-btn").click(function() {
+            $("#step2").show();
+            $("#logon").hide();
+        });
+    </script>
+}
+else
+{
+    <script language="javascript">
+        $("#logon").show();
+    </script>
+}
