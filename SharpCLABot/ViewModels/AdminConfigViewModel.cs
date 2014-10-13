@@ -62,5 +62,11 @@ namespace SharpCLABot.ViewModels
         /// </summary>
         /// <value>The contributors.</value>
         public List<ContributorViewModel> Contributors { get; private set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether [refresh hooks].
+        /// </summary>
+        /// <value><c>true</c> if [refresh hooks]; otherwise, <c>false</c>.</value>
+        public bool RefreshRepositories { get; set; } 
     }
 }

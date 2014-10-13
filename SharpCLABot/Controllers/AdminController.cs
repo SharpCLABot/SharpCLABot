@@ -24,7 +24,6 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Configuration;
 using System.Web.Mvc;
 using System.Web.Security;
 using Octokit;
@@ -203,38 +202,8 @@ namespace SharpCLABot.Controllers
             // TODO implement a way to refresh repositories
             if (config.Hooks.Count == 0)
             {
-                try
-                {
-                    var github = await GithubHelper.ConnectAndValidate(config.GitHubAdminApplicationToken, false);
-
-                    var repoHooks = await GithubHelper.GetAllHooksForCallback(github, config.GitHubWebHookCallbackUrl);
-
-                    foreach (var repoHook in repoHooks)
-                    {
-                        var repository = repoHook.Item1;
-                        var hook = repoHook.Item2;
-
-                        var repoHookViewModel = new GitHubRepositoryHook()
-                        {
-                            Owner = repository.Owner.Login,
-                            Name = repository.Name,
-                            Installed = hook != null
-                        };
-
-                        if (hook != null)
-                        {
-                            repoHookViewModel.Id = hook.Id;
-                        }
-
-                        config.Hooks.Add(repoHookViewModel);
-                    }
-
-                    config.Save();
-                }
-                catch (Exception ex)
-                {
-                    ModelState.AddModelError("", string.Format("Unable to get list of repositories: {0}", ex));
-                }
+                await UpdateWebHooks(viewModel);
+                config.Save();
             }
 
             UpdateContributors(viewModel);
@@ -257,6 +226,58 @@ namespace SharpCLABot.Controllers
             }
         }
 
+        private async Task<bool> UpdateWebHooks(AdminConfigViewModel viewModel)
+        {
+            bool hooksChanged = false;
+            try
+            {
+                var config = viewModel.Config;
+
+                var github = await GithubHelper.ConnectAndValidate(config.GitHubAdminApplicationToken, false);
+
+                var repoHooks = await GithubHelper.GetAllHooksForCallback(github, config.GitHubWebHookCallbackUrl);
+
+                foreach (var repoHook in repoHooks)
+                {
+                    var repository = repoHook.Item1;
+                    var hook = repoHook.Item2;
+
+                    var repoHookViewModel = new GitHubRepositoryHook()
+                    {
+                        Owner = repository.Owner.Login,
+                        Name = repository.Name,
+                        Installed = hook != null
+                    };
+
+                    if (hook != null)
+                    {
+                        repoHookViewModel.Id = hook.Id;
+                    }
+
+                    if (!config.Hooks.Any(existingHook => existingHook.Owner == repoHookViewModel.Owner && existingHook.Name == repoHookViewModel.Name))
+                    {
+                        config.Hooks.Add(repoHookViewModel);
+                        hooksChanged = true;
+                    }
+                }
+
+                // Remove hooks no longer valid
+                var registeredHooks = new List<GitHubRepositoryHook>(config.Hooks);
+                foreach (var hook in registeredHooks)
+                {
+                    if (!repoHooks.Any(tuple => tuple.Item1.Owner.Login == hook.Owner && tuple.Item1.Name == hook.Name))
+                    {
+                        config.Hooks.Remove(hook);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", string.Format("Unable to get the list of repositories: {0}", ex));
+            }
+            return hooksChanged;
+        }
+
         private async Task UpdateFromViewModel(AdminConfigViewModel viewModel)
         {
             var config = viewModel.Config;
@@ -268,6 +289,15 @@ namespace SharpCLABot.Controllers
             if (string.IsNullOrWhiteSpace(newUrl))
             {
                 newUrl = LicensingController.GetDefaultWebHookCallback(Request.Url);
+            }
+
+            // Update repositories if required
+            if (viewModel.RefreshRepositories)
+            {
+                if (await UpdateWebHooks(viewModel))
+                {
+                    viewModel.RefreshRepositories = false;
+                }
             }
 
             // Check if we have any hooks to: Update, Create or Remove
