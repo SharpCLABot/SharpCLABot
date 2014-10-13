@@ -33,21 +33,21 @@ SharpCLABot is a robot running on the **ASP.net platform** that will help you to
 ### A new contributor... 
 A new contributor is opening a pull-request on your repository that is being watched by SharpCLABot:
 
-> ![](images\Workflow-PullRequest-1.png)
+> ![PullRequest1](images/Workflow-PullRequest-1.png)
 
 ### SharpCLABot replies...
 SharpCLABot is replying that this contributor has not yet signed the CLA for the project, and invite the contributor to sign it:
 
-> ![](images\Workflow-PullRequest-2.png)
+> ![PullRequest2](images/Workflow-PullRequest-2.png)
 
 ### The contributor signs...
 The contributor go to the signing website provided by SharpCLABot and fill-out the form to sign the CLA:
 
-> ![](images\Workflow-PullRequest-3.png)
+> ![PullRequest3](images/Workflow-PullRequest-3.png)
 > 
 > ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 > 
-> ![](images\Workflow-PullRequest-4.png)
+> ![PullRequest4](images/Workflow-PullRequest-4.png)
 
 ### The contributor has signed...
 The contributor has just signed the CLA and is redirected to its pull request with a comment acknowledge from SharpCLABot:
