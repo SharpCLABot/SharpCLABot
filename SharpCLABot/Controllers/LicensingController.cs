@@ -88,8 +88,9 @@ namespace SharpCLABot.Controllers
             var dbCLA = new DbCLABot(AdminConfig.Instance.ConnectionStringDb);
             var contributor = dbCLA.GetOrCreateContributor(loginName);
 
-            // If the contributor has already accepted the CLA, then we can return immediately
-            if (!contributor.Accepted)
+            // If the contributor has not already accepted the CLA
+            // or he already accepted before making a pull request, we will send a message back to the pull request
+            if (!contributor.Accepted || contributor.PullRequestNumber == 0)
             {
                 // Create a new auto-response comment on the original pull-request asking for signing the CLA
                 contributor.PullRequestRepositoryOwner = pullRequest.RepoOwner;
@@ -101,7 +102,10 @@ namespace SharpCLABot.Controllers
                 {
                     // Render the comment
                     var homeSignCLA = Request.RequestUri.GetLeftPart(UriPartial.Authority);
-                    var commentBody = Templatizer.RenderReplyNotSigned(pullRequest.UserName, homeSignCLA);
+
+                    var commentBody = contributor.Accepted
+                        ? Templatizer.RenderReplySignedDone(pullRequest.UserName)
+                        : Templatizer.RenderReplyNotSigned(pullRequest.UserName, homeSignCLA);
 
                     // Send back a comment to github pull request
                     var token = AdminConfig.Instance.GitHubAdminApplicationToken;
