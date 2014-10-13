@@ -260,11 +260,6 @@
 </div>
 <script type="text/javascript">
 
-    var c1 = CodeMirror.fromTextArea(document.getElementById("Config_ReplyCLANotSigned"), { lineNumbers: true, mode: "markdown", lineWrapping: true });
-    var c2 = CodeMirror.fromTextArea(document.getElementById("Config_ReplyCLASignedDone"), { lineNumbers: true, mode: "markdown", lineWrapping: true });
-    var c3 = CodeMirror.fromTextArea(document.getElementById("Config_InformationUs"), { lineNumbers: true, mode: "htmlmixed", lineWrapping: true });
-    var c4 = CodeMirror.fromTextArea(document.getElementById("Config_IndividualCLA"), { lineNumbers: true, mode: "htmlmixed", lineWrapping: true });
-
     /* Test DB Connection */
     $('#Config_ConnectionStringDb').prop('readonly', @Model.Config.IsLocalDb.ToString().ToLowerInvariant());
     $('#Config_IsLocalDb').click(function (e) {
@@ -307,6 +302,12 @@
             webHookUrl.disabled = false;
         }
     });
+
+    /* Initialize CodeMirror */
+    var c1 = CodeMirror.fromTextArea(document.getElementById("Config_ReplyCLANotSigned"), { lineNumbers: true, mode: "markdown", lineWrapping: true });
+    var c2 = CodeMirror.fromTextArea(document.getElementById("Config_ReplyCLASignedDone"), { lineNumbers: true, mode: "markdown", lineWrapping: true });
+    var c3 = CodeMirror.fromTextArea(document.getElementById("Config_InformationUs"), { lineNumbers: true, mode: "htmlmixed", lineWrapping: true });
+    var c4 = CodeMirror.fromTextArea(document.getElementById("Config_IndividualCLA"), { lineNumbers: true, mode: "htmlmixed", lineWrapping: true });
 
     // Workaround to make sure CodeMirror is correctly initialized when switching tabs
     $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
