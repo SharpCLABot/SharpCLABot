@@ -197,6 +197,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="IndividualCLA">Invidual CLA</label>
+                                <p>This is the Contributor License Agreement that a contributor will have to sign. You can have a look at <a href="http://selector.harmonyagreements.org/" target="_blank">Harmony</a> to check how to generate a CLA for your project.</p>
                                 @Html.TextAreaFor(m => m.Config.IndividualCLA, new { @class = "form-control" })
                                 @Html.ValidationMessageFor(m => m.Config.IndividualCLA, null, new { @class = "help-block" })
                                 <span class="help-block">Enter the HTML text that will be displayed for the Individual CLA that will be signed by a contributor</span>
