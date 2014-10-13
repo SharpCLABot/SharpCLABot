@@ -135,7 +135,7 @@
                                                     @Html.HiddenFor(m => m.Config.Hooks[index].Id)
                                                     @Html.HiddenFor(m => m.Config.Hooks[index].Owner)
                                                     @Html.HiddenFor(m => m.Config.Hooks[index].Name)
-                                                    <a href="http://github.com/@(hook.Owner)/@(hook.Name)" target="_blank">@(hook.Owner)/@(hook.Name)</a>
+                                                    <a href="http://github.com/@(hook.Owner)/@(hook.Name)/settings/hooks" target="_blank">@(hook.Owner)/@(hook.Name)</a>
                                                 </td>
                                                 <td>
                                                     @Html.CheckBoxFor(m => m.Config.Hooks[index].Installed, new { @class = "form-control" })
