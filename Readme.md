@@ -87,5 +87,6 @@ Javascript:
 - [DotLiquid](https://github.com/formosatek/dotliquid)
 - [JSON.net](http://james.newtonking.com/json)
 
+This project was inspired by the [clabot](https://github.com/clabot/clabot) project.
 
 The logo "Robot" designed by [Ahmed Elzahra](http://www.thenounproject.com/trochilidae) from the [Noun Project](http://www.thenounproject.com) released under the [Creative Commons – Attribution (CC BY 3.0)](http://creativecommons.org/licenses/by/3.0/us/).
