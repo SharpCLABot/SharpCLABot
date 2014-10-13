@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web.Configuration;
 using System.Web.Mvc;
 using System.Web.Security;
 using Octokit;
@@ -143,11 +144,7 @@ namespace SharpCLABot.Controllers
             {
                 try
                 {
-                    connectionString += ";Connection Timeout=2";
-                    using (var con = new SqlConnection(connectionString))
-                    {
-                        con.Open();
-                    }
+                    CheckSqlConnection();
                 }
                 catch (Exception ex)
                 {
@@ -158,6 +155,16 @@ namespace SharpCLABot.Controllers
 
             task.Start();
             return new JsonResult() {Data = task.Wait(3000) ? task.Result : new DbConnectionStatus(false, "Unable to connect to database")};
+        }
+
+        private void CheckSqlConnection()
+        {
+            var connectionString = AdminConfig.Instance.ConnectionStringDb;
+            connectionString += ";Connection Timeout=2";
+            using (var con = new SqlConnection(connectionString))
+            {
+                con.Open();
+            }
         }
 
         [Authorize]
@@ -237,9 +244,17 @@ namespace SharpCLABot.Controllers
 
         private void UpdateContributors(AdminConfigViewModel viewModel)
         {
-            viewModel.Contributors.Clear();
-            var contributors = Db.Contributors.ToList();
-            viewModel.Contributors.AddRange(contributors.Select(contributor => new ContributorViewModel(contributor)));
+            try
+            {
+                // Before accessing check that the sql connection is valid
+                CheckSqlConnection();
+                viewModel.Contributors.Clear();
+                var contributors = Db.Contributors.ToList();
+                viewModel.Contributors.AddRange(contributors.Select(contributor => new ContributorViewModel(contributor)));
+            }
+            catch (Exception)
+            {
+            }
         }
 
         private async Task UpdateFromViewModel(AdminConfigViewModel viewModel)
