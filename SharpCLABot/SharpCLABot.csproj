@@ -167,7 +167,11 @@
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\docs.min.css" />
     <Content Include="Content\Images\ajax-loader.gif" />
+    <Content Include="Content\Images\CreateAppToken-1.png" />
+    <Content Include="Content\Images\CreateAppToken-2.png" />
+    <Content Include="Content\Images\CreateAppToken-3.png" />
     <Content Include="Content\Images\CreatePersonalToken-1.png" />
     <Content Include="Content\Images\CreatePersonalToken-2.png" />
     <Content Include="Content\Images\CreatePersonalToken-3.png" />
