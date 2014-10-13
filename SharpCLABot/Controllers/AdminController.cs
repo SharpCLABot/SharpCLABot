@@ -23,6 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Runtime.Remoting.Lifetime;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Web.Security;
@@ -253,9 +254,15 @@ namespace SharpCLABot.Controllers
                         repoHookViewModel.Id = hook.Id;
                     }
 
-                    if (!config.Hooks.Any(existingHook => existingHook.Owner == repoHookViewModel.Owner && existingHook.Name == repoHookViewModel.Name))
+                    var previousHook = config.Hooks.FirstOrDefault(existingHook =>
+                        existingHook.Owner == repoHookViewModel.Owner && existingHook.Name == repoHookViewModel.Name);
+                    if (previousHook == null)
                     {
                         config.Hooks.Add(repoHookViewModel);
+                        hooksChanged = true;
+                    } else if (hook != null && previousHook.Id != hook.Id)
+                    {
+                        previousHook.Id = hook.Id;
                         hooksChanged = true;
                     }
                 }
@@ -420,10 +427,10 @@ namespace SharpCLABot.Controllers
 
                 // Wait for hook to be received (Cheap/unreliable way to wait for ping request)
                 config.EndHookUpdate();
-            }
 
-            // Save to disk
-            config.Save();
+                // Save to disk
+                config.Save();
+            }
         }
     }
 }

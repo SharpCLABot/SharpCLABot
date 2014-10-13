@@ -20,21 +20,14 @@
 // IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 //  THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.Configuration;
 using System.Web.Http;
 using System.Xml.XPath;
 using Newtonsoft.Json;
-using Octokit;
 using SharpCLABot.Database;
 using SharpCLABot.Helpers;
 using SharpCLABot.Templates;
@@ -128,7 +121,7 @@ namespace SharpCLABot.Controllers
         private static void HandlePingRequest(PingRequest pingRequest)
         {
             var config = AdminConfig.Instance;
-            foreach (var hook in AdminConfig.Instance.Hooks)
+            foreach (var hook in config.Hooks)
             {
                 if (hook.Owner == pingRequest.RepoOwner && hook.Name == pingRequest.RepoName)
                 {
