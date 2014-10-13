@@ -30,6 +30,8 @@ SharpCLABot is a robot running on the **ASP.net platform** that will help you to
 
 ## How is it working?
 
+You can see it in action [here](https://github.com/SharpCLABot/playground/pull/1) (and test it yourself on our [playground](https://github.com/SharpCLABot/playground)!)
+
 ### A new contributor... 
 A new contributor is opening a pull-request on your repository that is being watched by SharpCLABot:
 
