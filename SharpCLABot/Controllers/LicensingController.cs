@@ -43,11 +43,8 @@ namespace SharpCLABot.Controllers
 {
     public class LicensingController : ApiController
     {
-        private readonly DbCLABot dbCLA;
-
         public LicensingController()
         {
-            dbCLA = new DbCLABot();
         }
 
         public static string GetDefaultWebHookCallback(Uri uri)
@@ -95,6 +92,7 @@ namespace SharpCLABot.Controllers
         {
             // Check for the login name
             var loginName = pullRequest.UserName;
+            var dbCLA = new DbCLABot(AdminConfig.Instance.ConnectionStringDb);
             var contributor = dbCLA.GetOrCreateContributor(loginName);
 
             // If the contributor has already accepted the CLA, then we can return immediately

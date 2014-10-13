@@ -19,6 +19,9 @@
 // DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER 
 // IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 //  THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+using System.Data.SqlClient;
+
 namespace SharpCLABot.Database
 {
     using System;
@@ -37,8 +40,7 @@ namespace SharpCLABot.Database
         // 
         // If you wish to target a different database and/or database provider, modify the 'CLAModel' 
         // connection string in the application configuration file.
-        public DbCLABot()
-            : base("name="+ DefaultKey)
+        public DbCLABot(string connectionString) : base(new SqlConnection(connectionString), true)
         {
         }
 

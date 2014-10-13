@@ -159,7 +159,6 @@ namespace SharpCLABot
         /// </summary>
         /// <value>The connection string database.</value>
         [Required(AllowEmptyStrings = false, ErrorMessage = "Please enter a valid db connection string")]
-        [XmlIgnore]
         public string ConnectionStringDb { get; set; }
 
         internal void BeginHookUpdate()
@@ -246,10 +245,11 @@ namespace SharpCLABot
                 // TODO log an exception if we really can't load it
             }
 
-            // Load database connection
-            var configuration = WebConfigurationManager.OpenWebConfiguration("~");
-            var section = (ConnectionStringsSection)configuration.GetSection("connectionStrings");
-            config.ConnectionStringDb = section.ConnectionStrings[DbCLABot.DefaultKey] == null ? DefaultLocalDbConnectionString : section.ConnectionStrings[DbCLABot.DefaultKey].ConnectionString;
+            // Check if database connection is LocalDb
+            if (string.IsNullOrWhiteSpace(config.ConnectionStringDb))
+            {
+                config.ConnectionStringDb = DefaultLocalDbConnectionString;
+            }
             config.IsLocalDb = config.ConnectionStringDb == DefaultLocalDbConnectionString;
 
             // Make sure we have a project name
@@ -273,16 +273,6 @@ namespace SharpCLABot
                 WriteFile(ReplySignedDoneFile, () => ReplyCLASignedDone);
                 WriteFile(IndividualCLAFile, () => IndividualCLA);
                 WriteFile(InformationUsFile, () => InformationUs);
-
-                var configuration = WebConfigurationManager.OpenWebConfiguration("~");
-                var section = (ConnectionStringsSection)configuration.GetSection("connectionStrings");
-                section.ConnectionStrings.Remove(DbCLABot.DefaultKey);
-                section.ConnectionStrings.Add(new ConnectionStringSettings(DbCLABot.DefaultKey,
-                    IsLocalDb ? DefaultLocalDbConnectionString : ConnectionStringDb)
-                {
-                    ProviderName = "System.Data.SqlClient"
-                });
-                configuration.Save();
 
                 // Save the current new instance
                 Instance = this;

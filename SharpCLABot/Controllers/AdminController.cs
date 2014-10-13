@@ -143,7 +143,7 @@ namespace SharpCLABot.Controllers
             {
                 try
                 {
-                    CheckSqlConnection();
+                    CheckSqlConnection(connectionString);
                 }
                 catch (Exception ex)
                 {
@@ -156,9 +156,8 @@ namespace SharpCLABot.Controllers
             return new JsonResult() {Data = task.Wait(3000) ? task.Result : new DbConnectionStatus(false, "Unable to connect to database")};
         }
 
-        private void CheckSqlConnection()
+        private void CheckSqlConnection(string connectionString)
         {
-            var connectionString = AdminConfig.Instance.ConnectionStringDb;
             connectionString += ";Connection Timeout=2";
             using (var con = new SqlConnection(connectionString))
             {
@@ -216,7 +215,7 @@ namespace SharpCLABot.Controllers
             try
             {
                 // Before accessing check that the sql connection is valid
-                CheckSqlConnection();
+                CheckSqlConnection(AdminConfig.Instance.ConnectionStringDb);
                 viewModel.Contributors.Clear();
                 var contributors = Db.Contributors.ToList();
                 viewModel.Contributors.AddRange(contributors.Select(contributor => new ContributorViewModel(contributor)));

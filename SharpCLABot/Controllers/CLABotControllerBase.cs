@@ -26,16 +26,22 @@ namespace SharpCLABot.Controllers
 {
     public abstract class CLABotControllerBase : Controller
     {
-        private readonly DbCLABot dbCLABot;
+        private readonly object lockDb = new object();
+        private DbCLABot dbCLABot;
 
         protected CLABotControllerBase()
         {
-            dbCLABot = new DbCLABot();
         }
 
         protected DbCLABot Db
         {
-            get { return dbCLABot; }
+            get
+            {
+                lock (lockDb)
+                {
+                    return dbCLABot ?? (dbCLABot = new DbCLABot(AdminConfig.Instance.ConnectionStringDb));
+                }
+            }
         }
     }
 }
