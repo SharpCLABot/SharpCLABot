@@ -3,8 +3,25 @@
 ![](logo.png)
 
 SharpCLABot is a robot running on the **ASP.net platform** that will help you to:
-- **Check Pull Requests** submitted to your repository 
-- Redirect new contributors to an **online electronic form** to sign the **Contributor License Agreement** of your project
+
+- **Check Pull Requests** submitted to your github repository. 
+- Redirect new contributors to an **online electronic form** to sign the **Contributor License Agreement** of your project.
+
+### Features
+
+- Fully integrated with github. 
+- Receive pull-request events, auto-comment on pull-request
+- Use github contributor identity via OAuth to verify before signing
+- Easy step-by-step configuration online
+- Administrator configuration panel
+ - Customize templates for the bot comment replies
+ - Customize templates for the *Individual CLA* and *Information about Us*  
+- Compatible with Microsoft Azure platform
+
+### Requirements
+
+- An ASP.net web server (supporting .NET 4.5+)
+- A small database deployed with the web site (Default is using LocalDb. Note: that LocalDb is not working on Azure and you need to provide your own connection string during SharpCLABot setup) 
 
 ## What is a CLA?
 
@@ -13,17 +30,37 @@ SharpCLABot is a robot running on the **ASP.net platform** that will help you to
 
 ## How is it working?
 
-TODO: add description
+### A new contributor... 
+A new contributor is opening a pull-request on your repository that is being watched by SharpCLABot:
 
+> ![](images\Workflow-PullRequest-1.png)
+
+### SharpCLABot replies...
+SharpCLABot is replying that this contributor has not yet signed the CLA for the project, and invite the contributor to sign it:
+
+> ![](images\Workflow-PullRequest-2.png)
+
+### The contributor signs...
+The contributor go to the signing website provided by SharpCLABot and fill-out the form to sign the CLA:
+
+> ![](images\Workflow-PullRequest-3.png)
+> 
+> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> 
+> ![](images\Workflow-PullRequest-4.png)
+
+### The contributor has signed...
+The contributor has just signed the CLA and is redirected to its pull request with a comment acknowledge from SharpCLABot:
+
+> ![](images\Workflow-PullRequest-5.png)
 
 ## How to install it?
 
-Compile and deploy this project to a website supporting ASP.net.
+Deploy this project to a website supporting ASP.net with .NET4.5+.
 
-SharpCLABot will guide you to setup your online electronic form.
+On the first connection, SharpCLABot will guide you to setup your online electronic form.
 
-TODO: add screenshots
-
+Check the [Setup](Setup.md) page for more details.
 
 ## License
 SharpCLABot is released under the [Simplied BSD License](http://opensource.org/licenses/BSD-2-Clause).
@@ -33,4 +70,22 @@ SharpCLABot is released under the [Simplied BSD License](http://opensource.org/l
 SharpCLABot is developed by [Alexandre Mutel](https://github.com/xoofx) - [@xoofx](http://twitter.com/xoofx)
 
 ## Credits
-Robot designed by [Ahmed Elzahra](http://www.thenounproject.com/trochilidae) from the [Noun Project](http://www.thenounproject.com) released under the [Creative Commons – Attribution (CC BY 3.0)](http://creativecommons.org/licenses/by/3.0/us/).
+
+SharpCLABot is using the following frameworks:
+
+Javascript:
+
+- [bootstrap](http://getbootstrap.com/)
+- [jquery](http://jquery.com/)
+- [CodeMirror](http://codemirror.net/)
+
+.NET:
+
+- [ASP.net](http://www.asp.net/)
+- [Entity Framework](http://msdn.microsoft.com/en-us/data/ef.aspx)
+- [Octokit.net](https://github.com/octokit/octokit.net)
+- [DotLiquid](https://github.com/formosatek/dotliquid)
+- [JSON.net](http://james.newtonking.com/json)
+
+
+The logo "Robot" designed by [Ahmed Elzahra](http://www.thenounproject.com/trochilidae) from the [Noun Project](http://www.thenounproject.com) released under the [Creative Commons – Attribution (CC BY 3.0)](http://creativecommons.org/licenses/by/3.0/us/).
