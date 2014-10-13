@@ -285,11 +285,21 @@ namespace SharpCLABot
             if (set == null) throw new ArgumentNullException("set");
             try
             {
-                set(File.ReadAllText(Path.Combine(HttpRuntime.AppDomainAppPath, file)));
+                var fullPath = Path.Combine(HttpRuntime.AppDomainAppPath, file);
+                if (!File.Exists(fullPath))
+                {
+                    var directory = Path.GetDirectoryName(fullPath);
+                    var fileName = Path.GetFileName(fullPath);
+                    var defaultFileName = "Default." + fileName;
+
+                    fullPath = Path.Combine(directory, defaultFileName);
+                }
+
+                set(File.ReadAllText(fullPath));
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // TODO log an exception if we really can't load it
+                set(string.Format("Unable to load file [{0}]", ex));
             }
         }
 

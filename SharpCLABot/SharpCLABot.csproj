@@ -569,14 +569,14 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Templates\ReplyNotSigned.md" />
+    <Content Include="Templates\Default.ReplyNotSigned.md" />
     <Content Include="Views\Home\Sign.cshtml" />
-    <Content Include="Views\Home\IndividualCLA.cshtml" />
-    <Content Include="Views\Home\InformationUs.cshtml" />
+    <Content Include="Views\Home\Default.IndividualCLA.cshtml" />
+    <Content Include="Views\Home\Default.InformationUs.cshtml" />
     <Content Include="Scripts\jquery.validate.bootstrap.js" />
     <Content Include="Views\Admin\LogOn.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
-    <Content Include="Templates\ReplySignedDone.md" />
+    <Content Include="Templates\Default.ReplySignedDone.md" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
