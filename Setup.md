@@ -17,21 +17,21 @@ The go to the address of your SharpCLABot server `https://myclabotserver.com` an
 
 ### 2.1 Welcome Setup Page
 
-> ![](images\Workflow-Setup-1.png)
+> ![Setup1](images/Workflow-Setup-1.png)
 
 ### 2.2 Create a Personal Access Token
 
-> ![](images\Workflow-Setup-2.png)
+> ![Setup2](images/Workflow-Setup-2.png)
 
  
 ### 2.3 Create an Application Client token
 
-> ![](images\Workflow-Setup-3.png)
+> ![Setup3](images/Workflow-Setup-3.png)
 
  
 ### 2.4 Register your Personal Accses Token
 
-> ![](images\Workflow-Setup-4.png)
+> ![Setup4](images/Workflow-Setup-4.png)
 
  
 Once you have entered your Personal Access Token, you will be able to configure SharpCLABot.
@@ -47,19 +47,19 @@ On this tab, you have to configure:
 - the database connection string
 - the repositories that will be watched by your SharpCLABot server 
 
-> ![](images\Workflow-Setup-5.png)
+> ![Setup5](images/Workflow-Setup-5.png)
 
 ### 3.2 Replies Tab
 
 On this tab, you can change the replies (**markdown** templates) used by the bot to respond on a pull request.
 
-> ![](images\Workflow-Setup-6.png) 
+> ![Setup6](images/Workflow-Setup-6.png) 
 
 ### 3.3 Agreement Tab
 
 On this tab, you can change the information about your project and the CLA that will be signed by contributors of your project (They are **html** templates)
 
-> ![](images\Workflow-Setup-7.png) 
+> ![Setup7](images/Workflow-Setup-7.png) 
 
 ### 3.4 Contributors Tab
 

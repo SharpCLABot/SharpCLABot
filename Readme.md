@@ -52,7 +52,7 @@ The contributor go to the signing website provided by SharpCLABot and fill-out t
 ### The contributor has signed...
 The contributor has just signed the CLA and is redirected to its pull request with a comment acknowledge from SharpCLABot:
 
-> ![](images\Workflow-PullRequest-5.png)
+> ![PullRequest5](images/Workflow-PullRequest-5.png)
 
 ## How to install it?
 
