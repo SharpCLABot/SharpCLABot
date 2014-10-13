@@ -37,6 +37,9 @@ namespace SharpCLABot
     [XmlRoot("AdminConfig", Namespace = NS)]
     public sealed class AdminConfig : IDisposable
     {
+        // Time to wait for webhook confirm in the UI
+        private const int WaitingTimeForWebHookConfirmInMillis = 1500;
+
         internal const string NS = "urn:SharpCLABot.AdminConfig";
 
         private const string DefaultFile = "AdminConfig.xml";
@@ -187,7 +190,8 @@ namespace SharpCLABot
         {
             try
             {
-                countdownHookEvent.Wait(500);
+                // Wait for 
+                countdownHookEvent.Wait(WaitingTimeForWebHookConfirmInMillis);
             }
             catch (Exception)
             {
