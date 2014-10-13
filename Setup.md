@@ -13,7 +13,7 @@ Prefer to use a server with **https** address in order to encrypt all communicat
 
 ## 2. Setup
 
-The go to the address of your SharpCLABot server `https://myclabotserver.com` and start following configuration steps:
+Then go to the address of your SharpCLABot server `https://myclabotserver.com` and start following configuration steps:
 
 ### 2.1 Welcome Setup Page
 
@@ -42,8 +42,8 @@ Once you have entered your Personal Access Token, you will be able to configure 
 
 On this tab, you have to configure:
 
-- the tokens
-- the secret phrase used by webhook callback
+- the tokens generated previously
+- the secret phrase used by the webhook callback (to authenticate the communication with github)
 - the database connection string
 - the repositories that will be watched by your SharpCLABot server 
 
