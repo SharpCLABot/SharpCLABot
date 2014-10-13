@@ -144,15 +144,16 @@
                                                     @Html.HiddenFor(m => m.Config.Hooks[index].Validated)
                                                     @if (hook.Installed)
                                                     {
-                                                        if (hook.Validated)
-                                                        {
-                                                            <p class="text-success text-center" style="margin: 0px;"><span class="glyphicon glyphicon-ok"></span></p>
-                                                        }
-                                                        else
-                                                        {
-                                                            <p class="text-danger text-center" style="margin: 0px;"><span class="glyphicon glyphicon-remove"></span></p>
-                                                        }
-
+                                                        <a href="http://github.com/@(hook.Owner)/@(hook.Name)/settings/hooks" target="_blank">
+                                                            @if (hook.Validated)
+                                                            {
+                                                                <p class="text-success text-center" style="margin: 0px;"><span class="glyphicon glyphicon-ok"></span></p>
+                                                            }
+                                                            else
+                                                            {
+                                                                <p class="text-warning text-center" style="margin: 0px;"><span class="glyphicon glyphicon-question-sign"></span></p>
+                                                            }
+                                                        </a>
                                                     }
                                                 </td>
                                             </tr>
