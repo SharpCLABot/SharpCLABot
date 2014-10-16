@@ -63,16 +63,15 @@ namespace SharpCLABot.Helpers
         {
             if (github == null) throw new ArgumentNullException("github");
 
-
             var allRepositories = await GetAllRepositories(github);
             var registeredHooks = new List<Tuple<Repository, Hook>>();
 
             foreach (var repo in allRepositories)
             {
+                Hook registeredHook = null;
                 try
                 {
                     var hooks = await github.Repository.Hooks.GetAll(repo.Owner.Login, repo.Name);
-                    Hook registeredHook = null;
                     foreach (var hook in hooks)
                     {
                         object callbackUrl;
@@ -83,12 +82,12 @@ namespace SharpCLABot.Helpers
                             break;
                         }
                     }
-
-                    registeredHooks.Add(new Tuple<Repository, Hook>(repo, registeredHook));
                 }
-                catch (Exception)
+                catch (NotFoundException)
                 {
                 }
+
+                registeredHooks.Add(new Tuple<Repository, Hook>(repo, registeredHook));
             }
 
             return registeredHooks;
