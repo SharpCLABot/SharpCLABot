@@ -1,4 +1,5 @@
-﻿@model SharpCLABot.ViewModels.AgreementViewModel
+﻿@using System.Globalization
+@model SharpCLABot.ViewModels.AgreementViewModel
 @{
     ViewBag.Title = AdminConfig.Instance.ProjectName + " - Sign Agreement";
     var readonlyAttributes = new Dictionary<string, object>()
@@ -83,7 +84,7 @@
 
                     <div class="form-group">
                         <label for="SignatureDate">Date</label>
-                        @Html.TextBoxFor(model => model.Contributor.SignatureDate, readonlyAttributes)
+                        @Html.TextBox("Contributor.SignatureDate", Model.Contributor.SignatureDate.ToString("yyyy-MM-ddTHH:mm:ssK", CultureInfo.InvariantCulture), readonlyAttributes)
                     </div>                    
 
                     <div class="form-group">
