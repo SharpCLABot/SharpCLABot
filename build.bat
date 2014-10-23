@@ -1,1 +1,1 @@
-"C:\Program Files (x86)\MSBuild\12.0\Bin\MSBuild" /t:Build SharpCLABot.sln
+"%WinDir%\Microsoft.NET\Framework\v4.0.30319\MSBuild" /t:Build SharpCLABot.sln
