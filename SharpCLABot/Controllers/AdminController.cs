@@ -71,6 +71,23 @@ namespace SharpCLABot.Controllers
                 return RedirectToAction("LogOn");
             }
 
+            // If token is changed by admin config, check that it is valid
+            var newToken = configViewModel.Config.GitHubAdminApplicationToken;
+            if (newToken != AdminConfig.Instance.GitHubAdminApplicationToken)
+            {
+                try
+                {
+                    // Performs a fullcheck of token access (check current user...etc.)
+                    await GithubHelper.ConnectAndValidate(newToken, true);
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("Token", ex.Message);
+                    ModelState.AddModelError("Config.GitHubAdminApplicationToken", "Invalid token");
+                    return View("Index", configViewModel);
+                }
+            }
+
             configViewModel.Config.IsValid = ModelState.IsValid;
 
             ModelState.Clear();

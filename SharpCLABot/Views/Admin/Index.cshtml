@@ -28,7 +28,7 @@
                             <div class="form-group">
                                 <span class="has-error">@Html.ValidationSummary(true)</span>
                                 <label for="Config.GitHubAdminApplicationToken">Personal Access Token</label>
-                                @Html.TextBoxFor(m => m.Config.GitHubAdminApplicationToken, new { @class = "form-control", @readonly = "" })
+                                @Html.TextBoxFor(m => m.Config.GitHubAdminApplicationToken, new { @class = "form-control" })
                                 @Html.ValidationMessageFor(m => m.Config.GitHubAdminApplicationToken, null, new { @class = "help-block" })
                             </div>
                             <div class="form-group">
